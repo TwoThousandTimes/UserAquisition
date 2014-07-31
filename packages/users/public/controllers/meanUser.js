@@ -44,8 +44,9 @@ angular.module('mean.users')
           email: $scope.user.email,
           password: $scope.user.password,
           confirmPassword: $scope.user.confirmPassword,
-          username: $scope.user.username,
-          name: $scope.user.name
+          username: $scope.user.email,
+          name: $scope.user.name,
+          role: $scope.user.role
         })
           .success(function() {
             // authentication OK

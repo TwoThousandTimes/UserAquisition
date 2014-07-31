@@ -1,3 +1,6 @@
 <section data-ng-controller="IndexController">
-  <h1 mean-token="'home-default'">This is the home view</h1>
+  <h1 mean-token="'home-default'">Welcome {{global.user.name}}!</h1>
+  <a ui-sref="potentials-new">Potential User Input Form</a>
+  <a ng-if="global.isAdmin" ui-sref="processing-selection">Process Selection</a>
+  <pre>{{global}}</pre>
 </section>

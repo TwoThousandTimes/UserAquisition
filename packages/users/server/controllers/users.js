@@ -47,12 +47,13 @@ exports.session = function(req, res) {
  * Create user
  */
 exports.create = function(req, res, next) {
-  var user = new User(req.body);
+  var tempUser = req.body;
 
-  user.provider = 'local';
+  tempUser.provider = 'local';
 
   // because we set our user.provider to local our models/user.js validation will always be true
   req.assert('name', 'You must enter a name').notEmpty();
+  req.assert('role', 'You must select a role for this user').notEmpty();
   req.assert('email', 'You must enter a valid email address').isEmail();
   req.assert('password', 'Password must be between 8-20 characters long').len(8, 20);
   req.assert('username', 'Username cannot be more than 20 characters').len(1, 20);
@@ -64,7 +65,13 @@ exports.create = function(req, res, next) {
   }
 
   // Hard coded for now. Will address this with the user permissions system in v0.3.5
-  user.roles = ['authenticated'];
+  tempUser.roles = ['authenticated'];
+  tempUser.roles.push(tempUser.role);
+
+  delete tempUser.role;  // remove role from the object.
+
+  var user = new User(tempUser);
+
   user.save(function(err) {
     if (err) {
       switch (err.code) {
