@@ -1,15 +1,22 @@
 'use strict';
 
-angular.module('mean.system').controller('PotentialsInputController', ['$scope', '$rootScope', 'Global', '$http', 'PotentialUsers',
-    function($scope, $rootScope, Global, $http, PotentialUsers) {
+angular.module('mean.system').controller('PotentialsInputController', ['$scope', '$rootScope', '$window', 'Global', '$http', 'PotentialUsers',
+    function($scope, $rootScope, $window, Global, $http, PotentialUsers) {
         $scope.global = Global;
         $scope.potential = {};  // Initialize potential as empty obj
+        $scope.potentialUsers = [];
 
         PotentialUsers.getAllPotentialUsers().success(function(users) {
             $scope.potentialUsers = users;
             
         }).error(function() {
             // TODO: handle event that no users are returned
+        });
+
+        $window.socket.on('potential:new', function (user) {
+            $scope.potentialUsers.unshift(user);
+            $scope.$apply();  // update the view
+            console.log('potential:new  ', user.username);
         });
 
         $scope.submitPotential = function() {
@@ -23,8 +30,7 @@ angular.module('mean.system').controller('PotentialsInputController', ['$scope',
             }).success(function(response) {
                 // 1. Clear the form
                 $scope.potential = {};
-                // 2. Add the new potential user to the list
-                console.log(response);
+                // 2. The user is added to the list of users upon socket response!
             }).error(function(error) {
                 // TODO: process error and handle accordingly
                 alert('error: ' + error);

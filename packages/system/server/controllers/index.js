@@ -51,7 +51,9 @@ exports.newPotential = function(req, res) {
             res.status(404).send({code: 3, message: 'Could not save the new PotentialUser. May already exist.'});
             console.log(err);
         } else {
-            res.send(potentialUser);
+            mean.app.sockets.emit('potential:new', potentialUser);
+            res.status(200).send();
+            // res.send(potentialUser);
         }
     });
 };
