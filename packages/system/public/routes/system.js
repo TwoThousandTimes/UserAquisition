@@ -16,13 +16,13 @@ angular.module('mean.system').config(['$stateProvider', '$urlRouterProvider',
         url: '/potentials/new',
         templateUrl: 'system/views/potentials.new.html'
       })
-      .state('processing', {
-        url: '/processing',
-        templateUrl: 'system/views/processing.html'
+      .state('process', {
+        url: '/process',
+        templateUrl: 'system/views/process.html'
       })
-      .state('processing-selection', {
-        url: '/processing/selection',
-        templateUrl: 'system/views/processing.selection.html'
+      .state('process-selection', {
+        url: '/process/selection',
+        templateUrl: 'system/views/process.selection.html'
       });
   }
 ]).config(['$locationProvider',

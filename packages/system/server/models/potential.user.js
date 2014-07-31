@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-  Schema = mongoose.Schema;
+  	Schema = mongoose.Schema;
 
 /**
  *	PotentialUser is unique according to username::source concatination
@@ -41,8 +41,8 @@ var PotentialUserSchema = new Schema({
 		default: Date.now
 	},
 	locked: {
-		type: Schema.ObjectId,
-		ref: 'User'
+		type: Boolean,
+		default: false
 	},
 	hasBeenMessaged: {
 		type: Boolean,

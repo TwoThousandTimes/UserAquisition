@@ -5,6 +5,40 @@ var mongoose = require('mongoose'),
   PotentialUser = mongoose.model('PotentialUser');
 
 /**
+*   Lock a PotentialUser. Emits an event to all sockets (other than current socket!)
+*/
+exports.lockPotentialUser = function (id, socket, cb) {
+    PotentialUser.findOneAndUpdate({ _id: id}, {locked: true}, function(err) {
+        if (err) { console.log(err); return; }
+        socket.broadcast.emit('potential:locked', id);  // broadcast emits to all sockets but this one.
+        console.log('PotentialUser ' + id + ' locked.');
+        if (cb) cb();
+    });
+};
+
+/**
+*   Release a PotentialUser from control. Emits an event to all sockets.
+*/
+exports.releasePotentialUser = function (id, app, cb) {
+    PotentialUser.findOneAndUpdate({ _id: id}, {locked: false}, function(err) {
+        if (err) { console.log(err); return; }
+        // Remove the locked user from list of this socket's locked users...
+        app.sockets.emit('potential:released', id);
+        console.log('PotentialUser ' + id + ' released.');
+        if (cb) cb();
+    });
+};
+
+/**
+*   Loop through all users that are currently locked by current socket.
+*/
+exports.releasePotentialUsersFromLoggedInUser = function ( lockedUsers, app ) {
+    for (var i = 0; i < lockedUsers.length; i++) {
+        exports.releasePotentialUser( lockedUsers[i], app);
+    }
+};
+
+/**
 *   Get all of the PotentialUser's stored in the db.
 */
 exports.getAllPotentialUsers = function(req, res) {
