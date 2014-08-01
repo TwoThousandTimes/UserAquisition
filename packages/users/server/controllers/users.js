@@ -5,11 +5,46 @@
  */
 var mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  PotentialUser = mongoose.model('PotentialUser'),
   async = require('async'),
   config = require('meanio').loadConfig(),
   crypto = require('crypto'),
   nodemailer = require('nodemailer'),
   templates = require('../template');
+
+exports.getAllUsers = function (req, res) {
+  User.find({}, 'name email roles', function ( err, users ) {
+    if (err) { console.log(err); res.status(400).send(); return; }
+    // Find out how many potential users were found and/or processed by this user.
+    var i = 0;
+    var results = [];
+
+    (function loop() {
+      if (i < users.length) {
+        var currentUser = {
+          _id: users[i]._id,
+          name: users[i].name,
+          email: users[i].email,
+          roles: users[i].roles
+        };
+        PotentialUser.find({ 'processing.processedBy': users[i]._id }, function ( err, processedUsers ) {
+          if (err) { console.log(err); }
+          currentUser.numProcessed = processedUsers ? processedUsers.length : 0;
+          PotentialUser.find({ finder: users[i]._id }, function ( err, foundUsers ) {
+            if (err) { console.log(err); }
+            currentUser.numFound = foundUsers ? foundUsers.length : 0;
+            results.push(currentUser);
+            i++;
+            loop();    
+          });
+        });
+      } else {
+        res.send(results);
+      }
+    }());
+
+  });
+};
 
 /**
  * Auth callback

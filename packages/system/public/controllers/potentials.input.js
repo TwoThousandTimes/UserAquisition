@@ -6,9 +6,8 @@ angular.module('mean.system').controller('PotentialsInputController', ['$scope',
         $scope.potential = {};  // Initialize potential as empty obj
         $scope.potentialUsers = [];
 
-        PotentialUsers.getAllPotentialUsers().success(function(users) {
+        PotentialUsers.getUnProcessedPotentialUsers().success(function(users) {
             $scope.potentialUsers = users;
-            
         }).error(function() {
             // TODO: handle event that no users are returned
         });
@@ -17,6 +16,17 @@ angular.module('mean.system').controller('PotentialsInputController', ['$scope',
             $scope.potentialUsers.unshift(user);
             $scope.$apply();  // update the view
             console.log('potential:new  ', user.username);
+        });
+
+        $window.socket.on('potential:processed', function ( id ) {
+            // Find the potential user with the given id and remove them!
+            for (var i = $scope.potentialUsers.length - 1; i >= 0; i--) {
+                if ($scope.potentialUsers[i]._id === id) {
+                    $scope.potentialUsers.splice(i, 1);
+                    $scope.$apply();
+                    break;
+                }
+            }
         });
 
         $scope.submitPotential = function() {

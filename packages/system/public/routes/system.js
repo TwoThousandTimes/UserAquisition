@@ -12,7 +12,7 @@ angular.module('mean.system').config(['$stateProvider', '$urlRouterProvider',
         url: '/',
         templateUrl: 'system/views/index.html'
       })
-      .state('potentials-new', {
+      .state('potentialsNew', {
         url: '/potentials/new',
         templateUrl: 'system/views/potentials.new.html'
       })
@@ -20,7 +20,7 @@ angular.module('mean.system').config(['$stateProvider', '$urlRouterProvider',
         url: '/process',
         templateUrl: 'system/views/process.html'
       })
-      .state('process-selection', {
+      .state('processSelection', {
         url: '/process/selection',
         templateUrl: 'system/views/process.selection.html'
       });

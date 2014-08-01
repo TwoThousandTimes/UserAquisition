@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
 *   Lock a PotentialUser. Emits an event to all sockets (other than current socket!)
 */
 exports.lockPotentialUser = function (id, socket, cb) {
-    PotentialUser.findOneAndUpdate({ _id: id}, {locked: true}, function(err) {
+    PotentialUser.findOneAndUpdate({ _id: id}, {locked: true}, function ( err ) {
         if (err) { console.log(err); return; }
         socket.broadcast.emit('potential:locked', id);  // broadcast emits to all sockets but this one.
         console.log('PotentialUser ' + id + ' locked.');
@@ -20,7 +20,7 @@ exports.lockPotentialUser = function (id, socket, cb) {
 *   Release a PotentialUser from control. Emits an event to all sockets.
 */
 exports.releasePotentialUser = function (id, app, cb) {
-    PotentialUser.findOneAndUpdate({ _id: id}, {locked: false}, function(err) {
+    PotentialUser.findOneAndUpdate({ _id: id}, {locked: false}, function ( err ) {
         if (err) { console.log(err); return; }
         // Remove the locked user from list of this socket's locked users...
         app.sockets.emit('potential:released', id);
@@ -38,11 +38,18 @@ exports.releasePotentialUsersFromLoggedInUser = function ( lockedUsers, app ) {
     }
 };
 
+exports.getUnProcessedPotentialUsers = function ( req, res ) {
+    PotentialUser.find( { 'processing.isProcessed': false }, function ( err, users ) {
+        if (err) { console.log(err); res.status(400).send(); return; }
+        res.send(users);
+    });
+};
+
 /**
 *   Get all of the PotentialUser's stored in the db.
 */
-exports.getAllPotentialUsers = function(req, res) {
-    PotentialUser.find({}, function(err, users) {
+exports.getAllPotentialUsers = function ( req, res ) {
+    PotentialUser.find({}, function ( err, users ) {
         if (err) {
             res.status(400).send();
             console.log(err);
@@ -56,17 +63,36 @@ exports.getAllPotentialUsers = function(req, res) {
 *   Process a PotentialUser. 
 */
 exports.processPotential = function (req, res) {
-    PotentialUser.findOne({_id: req.body._id}, function(err, userdoc) {
-        if (err) { console.log(err); return; }
+    PotentialUser.findOne({_id: req.body._id}, function ( err, userdoc ) {
+        if (err) { console.log(err); res.status(400).send(); return; }
         userdoc.processing.isProcessed = true;
         userdoc.processing.dateProcessed = new Date();
         userdoc.processing.messageSentToUser = req.body.processing.messageSentToUser;
         userdoc.processing.siteReferedTo = req.body.processing.siteReferedTo;
         userdoc.processing.processedBy = req.user._id;
-        userdoc.save(function(err) {
+        userdoc.save( function (err) {
             if (err) {console.log(err); res.status(400).send(); return;}
             // Saved the user, emit the event
             mean.app.sockets.emit('potential:processed', userdoc._id);
+            res.status(200).send();
+        });
+    });
+};
+
+/**
+*   Un-Process a PotentialUser.
+*/
+exports.unProcessPotential = function ( req, res ) {
+    PotentialUser.findOne({_id: req.body._id}, function ( err, userdoc ) {
+        if (err) { console.log(err); res.status(400).send(); return; }
+        userdoc.processing.isProcessed = false;
+        userdoc.processing.dateProcessed = undefined;
+        userdoc.processing.messageSentToUser = undefined;
+        userdoc.processing.siteReferedTo = undefined;
+        userdoc.processing.processedBy = undefined;
+        userdoc.save( function (err) {
+            if (err) {console.log(err); res.status(400).send(); return;}
+            mean.app.sockets.emit('potential:new', userdoc);  // send the potential:new signal so the user is put back into views...
             res.status(200).send();
         });
     });
@@ -83,7 +109,7 @@ exports.processPotential = function (req, res) {
 *           2: Could not extract source (reddit or quora) from the contextUrl
 *           3: Error saving potential user (possibly already exists)
 */
-exports.newPotential = function(req, res) {
+exports.newPotential = function ( req, res ) {
     var tmpPotentialUser = req.body;
     // 0. Check that the proper fields exist.
     if (!tmpPotentialUser.username || !tmpPotentialUser.contextUrl) {
@@ -106,6 +132,9 @@ exports.newPotential = function(req, res) {
     if (tmpPotentialUser.userUrl && tmpPotentialUser.userUrl.indexOf('http') < 0)
         tmpPotentialUser.userUrl = 'http://' + tmpPotentialUser.userUrl;
 
+    // 4. Attatch the current user as the finder
+    tmpPotentialUser.finder = req.user._id;
+
     var potentialUser = new PotentialUser(tmpPotentialUser);
     potentialUser.save(function(err) {
         if (err) {
@@ -119,7 +148,7 @@ exports.newPotential = function(req, res) {
 };
 
 
-exports.render = function(req, res) {
+exports.render = function ( req, res ) {
 
   var modules = [];
   // Preparing angular modules list with dependencies

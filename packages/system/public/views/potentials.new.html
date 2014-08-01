@@ -77,7 +77,7 @@
 	  		</thead>
 	  		<tbody>
 	  			<tr ng-repeat="pUser in potentialUsers">
-	  				<td>{{pUser.dateAdded}}</td>
+	  				<td>{{pUser.dateAdded | date : 'MMM d, y h:mm a' }}</td>
 	  				<td>{{pUser.username}}</td>
 	  				<td>{{pUser.contextUrl}}</td>
 	  				<td>{{pUser.userUrl}}</td>

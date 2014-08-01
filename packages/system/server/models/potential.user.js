@@ -56,8 +56,11 @@ var PotentialUserSchema = new Schema({
 			type: Schema.ObjectId,
 			ref: 'User'
 		}
+	},
+	finder: {
+		type: Schema.ObjectId,
+		ref: 'User'
 	}
-	
 });
 
 mongoose.model('PotentialUser', PotentialUserSchema);

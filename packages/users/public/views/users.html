@@ -1,0 +1,27 @@
+<div data-ng-controller="UsersController">
+	<h1>Finders/Admins</h1>
+	<div class="col-md-12">
+		<table class="table table-hover">
+	  		<thead>
+	  			<tr>
+	  				<th>Name</th>
+	  				<th>Email</th>
+	  				<th>Roles</th>
+	  				<th>Users Found</th>
+	  				<th>Users Processed</th>
+	  			</tr>
+	  		</thead>
+	  		<tbody>
+	  			<tr ng-repeat="user in users">
+	  				<td>{{user.name}}</td>
+	  				<td>{{user.email}}</td>
+	  				<td><span ng-repeat="role in user.roles">{{role}} </span></td>
+	  				<td>{{user.numFound}}</td>
+	  				<td>{{user.numProcessed}}</td>
+	  			</tr>
+	  		</tbody>
+		</table>
+	</div>
+
+	<pre>{{users}}</pre>
+</div>

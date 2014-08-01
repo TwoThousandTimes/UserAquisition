@@ -5,6 +5,8 @@ var users = require('../controllers/users');
 
 module.exports = function(MeanUser, app, auth, database, passport) {
 
+  app.route('/users/all').get(users.getAllUsers);
+
   app.route('/logout')
     .get(users.signout);
   app.route('/users/me')

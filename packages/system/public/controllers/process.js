@@ -4,6 +4,12 @@ angular.module('mean.system').controller('ProcessController', ['$scope', '$rootS
     function($scope, $rootScope, $window, Global, $http, PotentialUsers, $sce, $state) {
         $scope.global = Global;
         $scope.selectedUsers = $scope.global.selectedUsers;
+
+        // If we have no users selected, go back to user selection
+        if (!$scope.selectedUsers) {
+            $state.go('processSelection');
+        }
+
         $scope.selectedUser = {};
 
         $scope.markAsProcessed = function( pUser ) {
@@ -12,8 +18,16 @@ angular.module('mean.system').controller('ProcessController', ['$scope', '$rootS
                 pUser.processing.isProcessed = true;
                 $scope.selectedUser = {};  // Deselect the user
             }).error( function() {
-                // TODO: Alert the admin that the user was not properly processed!
+                pUser.error = true;
+            });
+        };
 
+        $scope.undoProcess = function ( pUser ) {
+            PotentialUsers.undoProcess( pUser ).success( function ( response ) {
+                pUser.processing.isProcessed = false;
+                $scope.selectedUser = {};
+            }).error( function () {
+                pUser.error = true;
             });
         };
 
@@ -32,22 +46,13 @@ angular.module('mean.system').controller('ProcessController', ['$scope', '$rootS
             $scope.selectedUser.processing.siteReferedTo = domain + '/q=' + source;
         };
 
-        // TODO: watch for state change and unlock all users still locked by current admin
+        // If the admin leaves the processing page, unlock all of those potential users that were currently locked.
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState, fromParams){
-                if (fromState.name === $state.current.name) {
+                if (fromState.name === 'process') {
                     $scope.selectedUsers.forEach( function ( user ) {
                         $window.socket.emit('potential:release', user._id);
                     });
-                }
-            });
-
-        $rootScope.$on('$stateChangeSuccess',
-            function(event, toState, toParams, fromState, fromParams){
-                console.log('stateChangeSuccess');
-                if (fromState.name === 'process') {
-                    $window.location.reload();
-                    console.log('reload!');
                 }
             });
     }

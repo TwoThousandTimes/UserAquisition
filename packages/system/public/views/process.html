@@ -17,8 +17,8 @@
 		  			</tr>
 		  		</thead>
 		  		<tbody>
-		  			<tr ng-repeat="pUser in selectedUsers" ng-click="setActiveUser( pUser )" ng-class="{success: pUser == selectedUser, active: pUser.processing.isProcessed}">
-		  				<td>{{pUser.dateAdded}}</td>
+		  			<tr ng-repeat="pUser in selectedUsers" ng-click="setActiveUser( pUser )" ng-class="{success: pUser == selectedUser, active: pUser.processing.isProcessed && !pUser.error, danger: pUser.error}">
+		  				<td>{{pUser.dateAdded | date : 'MMM d, y h:mm a' }}</td>
 		  				<td>{{pUser.username}}</td>
 		  				<td><a href="{{pUser.contextUrl}}" target="_blank">{{pUser.contextUrl}}</a></td>
 		  				<td><a href="{{pUser.userUrl}}" target="_blank">{{pUser.userUrl}}</a></td>
@@ -26,8 +26,10 @@
 		  				<td>{{pUser.freq}}</td>
 		  				<td>{{pUser.comments}}</td>
 		  				<td>
-		  					<button ng-show="pUser == selectedUser && !pUser.processing.isProcessed" ng-click="markAsProcessed(pUser)" class="btn btn-xs btn-default">Mark as Processed</button>
-		  					<span ng-show="pUser.processing.isProcessed" class="label label-success">Processed</span>
+		  					<button ng-show="pUser == selectedUser && !pUser.processing.isProcessed && !pUser.error" ng-click="markAsProcessed( pUser )" class="btn btn-xs btn-default">Mark as Processed</button>
+		  					<span ng-show="pUser.processing.isProcessed && !pUser.error" class="label label-success">Processed</span>
+		  					<button ng-show="pUser.processing.isProcessed && !pUser.error" ng-click="undoProcess( pUser )" class="btn btn-xs btn-warning">Undo?</button>
+		  					<span ng-show="pUser.error" class="label label-danger">Error!</span>
 		  				</td>
 		  			</tr>
 		  		</tbody>

@@ -26,6 +26,10 @@ angular.module('mean.users').config(['$stateProvider',
 
     // states for my app
     $stateProvider
+      .state('users', {
+        url: '/users/all',
+        templateUrl: 'users/views/users.html'
+      })
       .state('auth', {
         url: '/auth',
         templateUrl: 'users/views/index.html'
@@ -39,10 +43,7 @@ angular.module('mean.users').config(['$stateProvider',
       })
       .state('auth.register', {
         url: '/register',
-        templateUrl: 'users/views/register.html',
-        resolve: {
-          loggedin: checkLoggedOut
-        }
+        templateUrl: 'users/views/register.html'
       })
       .state('forgot-password', {
         url: '/forgot-password',

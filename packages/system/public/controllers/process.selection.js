@@ -5,7 +5,7 @@ angular.module('mean.system').controller('ProcessSelectionController', ['$scope'
         $scope.global = Global;
         $scope.potentialUsers = [];
 
-        PotentialUsers.getAllPotentialUsers().success(function(users) {
+        PotentialUsers.getUnProcessedPotentialUsers().success(function(users) {
             $scope.potentialUsers = users;
         }).error(function() {
             // TODO: handle event that no users are returned
@@ -33,10 +33,13 @@ angular.module('mean.system').controller('ProcessSelectionController', ['$scope'
         };
 
         $window.socket.on('potential:new', function ( user ) {
-            $scope.potentialUsers.unshift(user);
+            $scope.potentialUsers.unshift( user );
             $scope.$apply();  // update the view
-            console.log('potential:new  ', user.username);
         });
+
+        // $window.socket.on('potential:unprocessed', function ( user ) {
+        //     $scope.potentialUsers.unshift( user );
+        // });
 
         $window.socket.on('potential:locked', function ( id ) {
             // Find the potential user with the given id and lock them!
@@ -44,6 +47,7 @@ angular.module('mean.system').controller('ProcessSelectionController', ['$scope'
                 if ($scope.potentialUsers[i]._id === id) {
                     $scope.potentialUsers[i].locked = true;
                     $scope.$apply();
+                    break;
                 }
             }
         });
@@ -54,12 +58,38 @@ angular.module('mean.system').controller('ProcessSelectionController', ['$scope'
                 if ($scope.potentialUsers[i]._id === id) {
                     $scope.potentialUsers[i].locked = false;
                     $scope.$apply();
+                    break;
+                }
+            }
+        });
+
+        $window.socket.on('potential:processed', function ( id ) {
+            // Find the potential user with the given id and remove them!
+            for (var i = $scope.potentialUsers.length - 1; i >= 0; i--) {
+                if ($scope.potentialUsers[i]._id === id) {
+                    $scope.potentialUsers.splice(i, 1);
+                    $scope.$apply();
+                    break;
                 }
             }
         });
 
         $scope.predicate = 'dateAdded';  // Default sorting
         $scope.reverse = false;
+
+        // If the admin leaves this state (without heading to processing) make sure to unlock the selected users (if any).
+        $rootScope.$on('$stateChangeStart',
+            function(event, toState, toParams, fromState, fromParams){
+                if (fromState.name === 'processSelection' && toState.name !== 'process') {
+                    console.log('Left processingSelection without going to processing');
+                    var selectedUsers = $scope.potentialUsers.filter( function ( user ) {
+                        return user.selected;
+                    });
+                    selectedUsers.forEach( function ( user ) {
+                        $window.socket.emit('potential:release', user._id);
+                    });
+                }
+            });
 
     }
 ]);
