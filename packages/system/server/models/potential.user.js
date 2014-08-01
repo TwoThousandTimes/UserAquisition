@@ -44,13 +44,21 @@ var PotentialUserSchema = new Schema({
 		type: Boolean,
 		default: false
 	},
-	hasBeenMessaged: {
-		type: Boolean,
-		default: false
-	},
-	referedTo: {
-		type: String
+	processing: {
+		isProcessed: {
+			type: Boolean,
+			default: false
+		},
+		dateProcessed: Date,
+		messageSentToUser: String,
+		siteReferedTo: String,
+		processedBy: {
+			type: Schema.ObjectId,
+			ref: 'User'
+		}
 	}
+	
 });
 
 mongoose.model('PotentialUser', PotentialUserSchema);
+module.exports = mongoose.model('PotentialUser');

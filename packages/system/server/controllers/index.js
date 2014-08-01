@@ -53,6 +53,26 @@ exports.getAllPotentialUsers = function(req, res) {
 };
 
 /**
+*   Process a PotentialUser. 
+*/
+exports.processPotential = function (req, res) {
+    PotentialUser.findOne({_id: req.body._id}, function(err, userdoc) {
+        if (err) { console.log(err); return; }
+        userdoc.processing.isProcessed = true;
+        userdoc.processing.dateProcessed = Date.now;
+        userdoc.processing.messageSentToUser = req.body.processing.messageSentToUser;
+        userdoc.processing.siteReferedTo = req.body.processing.siteReferedTo;
+        userdoc.processing.processedBy = req.user._id;
+        userdoc.save(function(err) {
+            if (err) {console.log(err); res.status(400).send(); return;}
+            // Saved the user, emit the event
+            mean.app.sockets.emit('potential:processed', userdoc._id);
+            res.status(200).send();
+        });
+    });
+};
+
+/**
 *  Create a new PotentialUser in the database. Returns the new PotentialUser
 *  in JSON format.
 *       status
@@ -87,7 +107,6 @@ exports.newPotential = function(req, res) {
         } else {
             mean.app.sockets.emit('potential:new', potentialUser);
             res.status(200).send();
-            // res.send(potentialUser);
         }
     });
 };

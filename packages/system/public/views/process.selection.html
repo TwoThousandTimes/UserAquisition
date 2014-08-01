@@ -25,13 +25,14 @@
 	  				<td>{{pUser.freq}}</td>
 	  				<td>{{pUser.comments}}</td>
 	  				<td>
-	  					<input type="checkbox" ng-model="pUser.selected" ng-disabled="pUser.locked" ng-change="userChecked(pUser)"> <span ng-show="pUser.locked" class="label label-danger">Locked</span> 
+	  					<input type="checkbox" ng-model="pUser.selected" ng-disabled="pUser.locked" ng-change="userChecked(pUser)" ng-hide="pUser.locked"> 
+	  					<span ng-show="pUser.locked" class="label label-danger">Locked</span>
 	  				</td>
 	  			</tr>
 	  		</tbody>
 		</table>
 	</div>
 
-	<a ui-sref="process">Process Selected Potentials</a>
+	<button class="btn btn-default pull-right" ng-click="processSelectedUsers()">Process Selected Users</button>
 </div>
 	

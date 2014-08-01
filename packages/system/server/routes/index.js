@@ -7,5 +7,6 @@ module.exports = function(System, app, auth, database) {
   app.route('/').get(index.render);
   app.route('/potential/all').get(index.getAllPotentialUsers);
   app.route('/potential/new').post(index.newPotential);
+  app.route('/potential/process').post(index.processPotential);
 
 };
