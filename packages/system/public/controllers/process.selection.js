@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('mean.system').controller('ProcessSelectionController', ['$scope', '$rootScope', '$window', 'Global', '$http', 'PotentialUsers', '$state',
-    function($scope, $rootScope, $window, Global, $http, PotentialUsers, $state) {
+angular.module('mean.system').controller('ProcessSelectionController', ['$scope', '$rootScope', '$window', 'Global', '$http', 'PotentialUsers', '$state', '$filter',
+    function($scope, $rootScope, $window, Global, $http, PotentialUsers, $state, $filter) {
         $scope.global = Global;
         $scope.potentialUsers = [];
 
@@ -11,7 +11,10 @@ angular.module('mean.system').controller('ProcessSelectionController', ['$scope'
             // TODO: handle event that no users are returned
         });
 
-        $scope.userChecked = function( pUser ) {
+        $scope.selectUser = function( pUser ) {
+            if (pUser.locked) return;
+
+            pUser.selected = !pUser.selected;
             if (pUser.selected) {
                 // Just selected this user, try to lock that user.
                 $window.socket.emit('potential:lock', pUser._id);
@@ -22,20 +25,20 @@ angular.module('mean.system').controller('ProcessSelectionController', ['$scope'
         };
 
         $scope.processSelectedUsers = function () {
-            var selectedUsers = $scope.potentialUsers.filter( function (user) {
+            var selectedUsers = $scope.potentialUsers.filter( function ( user ) {
                 return user.selected;
             });
             $scope.global.selectedUsers = selectedUsers;
             $state.go('process');
         };
 
-        $window.socket.on('potential:new', function (user) {
+        $window.socket.on('potential:new', function ( user ) {
             $scope.potentialUsers.unshift(user);
             $scope.$apply();  // update the view
             console.log('potential:new  ', user.username);
         });
 
-        $window.socket.on('potential:locked', function (id) {
+        $window.socket.on('potential:locked', function ( id ) {
             // Find the potential user with the given id and lock them!
             for (var i = $scope.potentialUsers.length - 1; i >= 0; i--) {
                 if ($scope.potentialUsers[i]._id === id) {
@@ -45,7 +48,7 @@ angular.module('mean.system').controller('ProcessSelectionController', ['$scope'
             }
         });
 
-        $window.socket.on('potential:released', function (id) {
+        $window.socket.on('potential:released', function ( id ) {
             // Find the potential user with the given id and release them!
             for (var i = $scope.potentialUsers.length - 1; i >= 0; i--) {
                 if ($scope.potentialUsers[i]._id === id) {
@@ -54,5 +57,9 @@ angular.module('mean.system').controller('ProcessSelectionController', ['$scope'
                 }
             }
         });
+
+        $scope.predicate = 'dateAdded';  // Default sorting
+        $scope.reverse = false;
+
     }
 ]);

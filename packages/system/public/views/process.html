@@ -17,20 +17,17 @@
 		  			</tr>
 		  		</thead>
 		  		<tbody>
-		  			<tr ng-repeat="pUser in selectedUsers">
+		  			<tr ng-repeat="pUser in selectedUsers" ng-click="setActiveUser( pUser )" ng-class="{success: pUser == selectedUser, active: pUser.processing.isProcessed}">
 		  				<td>{{pUser.dateAdded}}</td>
 		  				<td>{{pUser.username}}</td>
-		  				<td>{{pUser.contextUrl}}</td>
-		  				<td>{{pUser.userUrl}}</td>
+		  				<td><a href="{{pUser.contextUrl}}" target="_blank">{{pUser.contextUrl}}</a></td>
+		  				<td><a href="{{pUser.userUrl}}" target="_blank">{{pUser.userUrl}}</a></td>
 		  				<td>{{pUser.karma}}</td>
 		  				<td>{{pUser.freq}}</td>
 		  				<td>{{pUser.comments}}</td>
 		  				<td>
-		  					<button ng-hide="pUser.processing.isProcessed" ng-click="markAsProcessed(pUser)" class="btn btn-xs btn-default">Mark as Processed</button>
+		  					<button ng-show="pUser == selectedUser && !pUser.processing.isProcessed" ng-click="markAsProcessed(pUser)" class="btn btn-xs btn-default">Mark as Processed</button>
 		  					<span ng-show="pUser.processing.isProcessed" class="label label-success">Processed</span>
-		  				</td>
-		  				<td>
-		  					<button ng-click="setActiveUser( pUser )">Set</button>
 		  				</td>
 		  			</tr>
 		  		</tbody>
@@ -41,21 +38,27 @@
 	<div class="row">
 		<div class="col-md-6">
 			<h2>URL Generator</h2>
-
-			<textarea ng-model="selectedUser.processing.siteReferedTo"></textarea>
+			<div class="col-md-6">
+				<div>www.site-a.com <button class="btn btn-xs btn-default" ng-click="generateUrl( 'www.site-a.com' )" ng-show="selectedUser.username">Generate</button></div>
+				<div>www.site-b.com <button class="btn btn-xs btn-default" ng-click="generateUrl( 'www.site-b.com' )" ng-show="selectedUser.username">Generate</button></div>
+				<div>www.site-c.com <button class="btn btn-xs btn-default" ng-click="generateUrl( 'www.site-c.com' )" ng-show="selectedUser.username">Generate</button></div>
+			</div>
+			<div class="col-md-6">
+				<textarea class="form-control" rows="1" ng-model="selectedUser.processing.siteReferedTo"></textarea>
+			</div>
+			
 		</div>
 		<div class="col-md-6">
 			<h2>Message PreProcessor</h2>
-			<textarea ng-model="selectedUser.processing.messageSentToUser"></textarea>
+			<textarea class="form-control" ng-model="selectedUser.processing.messageSentToUser"></textarea>
 		</div>
 
 	</div>
 
-	<div class="row">
-		<div class="col-md-12">
-			<h2>iFrame</h2>
-			<!-- iframe goes here -->
-		</div>
+	<div>
+		<pre>
+			{{selectedUser}}
+		</pre>
 	</div>
 </div>
 

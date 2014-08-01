@@ -1,22 +1,21 @@
 <div data-ng-controller="ProcessSelectionController">
 	<h1>Processing Selection</h1>
-	
+
 	<div class="col-md-12">
 		<table class="table table-hover">
 	  		<thead>
 	  			<tr>
-	  				<th>Date Added</th>
-	  				<th>Username</th>
-	  				<th>Context URL</th>
-	  				<th>User URL</th>
-	  				<th>Karma</th>
-	  				<th>Frequency</th>
+	  				<th ng-click="predicate = 'dateAdded'; reverse=!reverse">Date Added</th>
+	  				<th ng-click="predicate = 'username'; reverse=!reverse">Username</th>
+	  				<th ng-click="predicate = 'contextUrl'; reverse=!reverse">Context URL</th>
+	  				<th ng-click="predicate = 'userUrl'; reverse=!reverse">User URL</th>
+	  				<th ng-click="predicate = 'karma'; reverse=!reverse">Karma</th>
+	  				<th ng-click="predicate = 'freq'; reverse=!reverse">Frequency</th>
 	  				<th>Comments</th>
-	  				<th></th>
 	  			</tr>
 	  		</thead>
 	  		<tbody>
-	  			<tr ng-repeat="pUser in potentialUsers">
+	  			<tr ng-repeat="pUser in potentialUsers | orderBy:predicate:reverse" ng-click="selectUser( pUser )" ng-class="{success: pUser.selected}">
 	  				<td>{{pUser.dateAdded}}</td>
 	  				<td>{{pUser.username}}</td>
 	  				<td>{{pUser.contextUrl}}</td>
@@ -25,7 +24,7 @@
 	  				<td>{{pUser.freq}}</td>
 	  				<td>{{pUser.comments}}</td>
 	  				<td>
-	  					<input type="checkbox" ng-model="pUser.selected" ng-disabled="pUser.locked" ng-change="userChecked(pUser)" ng-hide="pUser.locked"> 
+	  					<!-- <input type="checkbox" ng-model="pUser.selected" ng-disabled="pUser.locked" ng-change="userChecked(pUser)" ng-hide="pUser.locked"> -->
 	  					<span ng-show="pUser.locked" class="label label-danger">Locked</span>
 	  				</td>
 	  			</tr>

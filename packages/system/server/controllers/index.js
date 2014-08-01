@@ -59,7 +59,7 @@ exports.processPotential = function (req, res) {
     PotentialUser.findOne({_id: req.body._id}, function(err, userdoc) {
         if (err) { console.log(err); return; }
         userdoc.processing.isProcessed = true;
-        userdoc.processing.dateProcessed = Date.now;
+        userdoc.processing.dateProcessed = new Date();
         userdoc.processing.messageSentToUser = req.body.processing.messageSentToUser;
         userdoc.processing.siteReferedTo = req.body.processing.siteReferedTo;
         userdoc.processing.processedBy = req.user._id;
@@ -99,6 +99,13 @@ exports.newPotential = function(req, res) {
     
     // 2. Build the unique index in the form username::source
     tmpPotentialUser.unique = tmpPotentialUser.username + '::' + tmpPotentialUser.source;
+
+    // 3. If the contextUrl and/or userUrl does not have http(s) add it.  (not super solid but catches urls without http(s))
+    if (tmpPotentialUser.contextUrl.indexOf('http') < 0)
+        tmpPotentialUser.contextUrl = 'http://' + tmpPotentialUser.contextUrl;
+    if (tmpPotentialUser.userUrl && tmpPotentialUser.userUrl.indexOf('http') < 0)
+        tmpPotentialUser.userUrl = 'http://' + tmpPotentialUser.userUrl;
+
     var potentialUser = new PotentialUser(tmpPotentialUser);
     potentialUser.save(function(err) {
         if (err) {
