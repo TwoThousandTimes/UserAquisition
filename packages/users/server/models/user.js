@@ -51,6 +51,10 @@ var UserSchema = new Schema({
     unique: true,
     required: true
   },
+  lastLogin: {
+    type: Date,
+    default: Date.now
+  },
   roles: {
     type: Array,
     default: ['authenticated']

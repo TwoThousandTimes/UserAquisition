@@ -6,9 +6,10 @@
 	  			<tr>
 	  				<th>Name</th>
 	  				<th>Email</th>
-	  				<th>Roles</th>
+	  				<th>Role</th>
 	  				<th>Users Found</th>
 	  				<th>Users Processed</th>
+	  				<th>Last Login</th>
 	  			</tr>
 	  		</thead>
 	  		<tbody>
@@ -18,10 +19,9 @@
 	  				<td><span ng-repeat="role in user.roles">{{role}} </span></td>
 	  				<td>{{user.numFound}}</td>
 	  				<td>{{user.numProcessed}}</td>
+	  				<td>{{user.lastLogin | date : 'MMM d, y h:mm a' }}</td>
 	  			</tr>
 	  		</tbody>
 		</table>
 	</div>
-
-	<pre>{{users}}</pre>
 </div>

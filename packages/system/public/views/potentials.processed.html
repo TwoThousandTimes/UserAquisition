@@ -1,0 +1,41 @@
+<section data-ng-controller="ProcessedPotentialsController">
+    <h1>Processed Potential Users</h1>
+	<table class="table table-hover">
+  		<thead>
+  			<tr>
+  				<th class="table-order-by" ng-click="predicate = 'username'; reverse=!reverse">Username</th>
+  				<th class="table-order-by" ng-click="predicate = 'contextUrl'; reverse=!reverse">Context URL</th>
+  				<th class="table-order-by" ng-click="predicate = 'userUrl'; reverse=!reverse">User URL</th>
+  				<th class="table-order-by" ng-click="predicate = 'karma'; reverse=!reverse">Karma</th>
+          <th class="table-order-by" ng-click="predicate = 'karma'; reverse=!reverse">Followers</th>
+  				<th class="table-order-by" ng-click="predicate = 'freq'; reverse=!reverse">Frequency</th>
+  				<th class="table-order-by" ng-click="predicate = 'dateAdded'; reverse=!reverse">Date Added</th>
+  				<th class="table-order-by" ng-click="predicate = 'processing.dateProcessed'; reverse=!reverse">Date Processed</th>
+  				<th>Message Sent</th>
+  				<th class="table-order-by" ng-click="predicate = 'processing.readability'; reverse=!reverse">Readability</th>
+  				<th class="table-order-by" ng-click="predicate = 'processing.siteReferedTo'; reverse=!reverse">Site Refered</th>
+  				<th class="table-order-by" ng-click="predicate = 'processing.processedBy'; reverse=!reverse">Processed By</th>
+  				<th>Comments</th>
+          <th class="table-order-by" ng-click="predicate = 'success'; reverse=!reverse">Success</th>
+  			</tr>
+  		</thead>
+  		<tbody>
+  			<tr ng-repeat="pUser in processedUsers | orderBy:predicate:reverse">
+  				<td>{{pUser.username}}</td>
+  				<td>{{pUser.contextUrl}}</td>
+  				<td>{{pUser.userUrl}}</td>
+  				<td>{{pUser.karma}}</td>
+          <td>{{pUser.followers}}</td>
+  				<td>{{pUser.freq}}</td>
+  				<td>{{pUser.dateAdded | date : 'MMM d, y h:mm a' }}</td>
+  				<td>{{pUser.processing.dateProcessed | date : 'MMM d, y h:mm a' }}</td>
+  				<td>{{pUser.processing.messageSentToUser}}</td>
+  				<td>{{pUser.processing.readability}}</td>
+  				<td>{{pUser.processing.siteReferedTo}}</td>
+  				<td>{{pUser.processing.processedBy.name}}</td>
+  				<td>{{pUser.comments}}</td>
+          <td><input type="checkbox" ng-model="pUser.success" ng-change="toggleSuccess( pUser )"></td>
+  			</tr>
+  		</tbody>
+	</table>
+</section>

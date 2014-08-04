@@ -1,6 +1,7 @@
 <section data-ng-controller="IndexController">
   <h1 mean-token="'home-default'">Welcome {{global.user.name}}!</h1>
-  <a ui-sref="potentials-new">Potential User Input Form</a>
-  <a ng-if="global.isAdmin" ui-sref="process-selection">Process Selection</a>
-  <pre>{{global}}</pre>
+  <h2><a ng-if="global.user.name" ui-sref="potentialsNew">Potential User Input Form</a></h2>
+  <h2><a ng-if="global.isAdmin" ui-sref="processSelection">Process Potential Users</a></h2>
+  <h2><a ng-if="global.isAdmin" ui-sref="processedPotentials">View Processed Potential Users</a></h2>
 </section>
+

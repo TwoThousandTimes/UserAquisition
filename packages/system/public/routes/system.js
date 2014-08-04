@@ -23,6 +23,10 @@ angular.module('mean.system').config(['$stateProvider', '$urlRouterProvider',
       .state('processSelection', {
         url: '/process/selection',
         templateUrl: 'system/views/process.selection.html'
+      })
+      .state('processedPotentials', {
+        url: '/potentials/processed',
+        templateUrl: 'system/views/potentials.processed.html'
       });
   }
 ]).config(['$locationProvider',

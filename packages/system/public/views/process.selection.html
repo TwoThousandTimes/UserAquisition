@@ -5,12 +5,13 @@
 		<table class="table table-hover">
 	  		<thead>
 	  			<tr>
-	  				<th ng-click="predicate = 'dateAdded'; reverse=!reverse">Date Added</th>
-	  				<th ng-click="predicate = 'username'; reverse=!reverse">Username</th>
-	  				<th ng-click="predicate = 'contextUrl'; reverse=!reverse">Context URL</th>
-	  				<th ng-click="predicate = 'userUrl'; reverse=!reverse">User URL</th>
-	  				<th ng-click="predicate = 'karma'; reverse=!reverse">Karma</th>
-	  				<th ng-click="predicate = 'freq'; reverse=!reverse">Frequency</th>
+	  				<th class="table-order-by" ng-click="predicate = 'dateAdded'; reverse=!reverse">Date Added</th>
+	  				<th class="table-order-by" ng-click="predicate = 'username'; reverse=!reverse">Username</th>
+	  				<th class="table-order-by" ng-click="predicate = 'contextUrl'; reverse=!reverse">Context URL</th>
+	  				<th class="table-order-by" ng-click="predicate = 'userUrl'; reverse=!reverse">User URL</th>
+	  				<th class="table-order-by" ng-click="predicate = 'karma'; reverse=!reverse">Karma</th>
+	  				<th class="table-order-by" ng-click="predicate = 'followers'; reverse=!reverse">Followers</th>
+	  				<th class="table-order-by" ng-click="predicate = 'freq'; reverse=!reverse">Frequency</th>
 	  				<th>Comments</th>
 	  			</tr>
 	  		</thead>
@@ -21,6 +22,7 @@
 	  				<td>{{pUser.contextUrl}}</td>
 	  				<td>{{pUser.userUrl}}</td>
 	  				<td>{{pUser.karma}}</td>
+	  				<td>{{pUser.followers}}</td>
 	  				<td>{{pUser.freq}}</td>
 	  				<td>{{pUser.comments}}</td>
 	  				<td>

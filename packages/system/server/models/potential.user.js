@@ -26,11 +26,12 @@ var PotentialUserSchema = new Schema({
 		type: String,
 		required: true
 	},
-	userUrl: String,
-	karma: {
-		type: Number,
-		default: 0
+	userUrl: {
+		type: String,
+		unique: true
 	},
+	karma: Number,
+	followers: Number,
 	freq: {
 		type: String,
 		default: 'low'
@@ -55,11 +56,16 @@ var PotentialUserSchema = new Schema({
 		processedBy: {
 			type: Schema.ObjectId,
 			ref: 'User'
-		}
+		},
+		readability: Number
 	},
 	finder: {
 		type: Schema.ObjectId,
 		ref: 'User'
+	},
+	success: {
+		type: Boolean,
+		default: false
 	}
 });
 

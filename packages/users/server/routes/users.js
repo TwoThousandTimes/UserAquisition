@@ -2,6 +2,8 @@
 
 // User routes use users controller
 var users = require('../controllers/users');
+var mongoose = require('mongoose'),
+  User = mongoose.model('User');
 
 module.exports = function(MeanUser, app, auth, database, passport) {
 
@@ -36,9 +38,12 @@ module.exports = function(MeanUser, app, auth, database, passport) {
     .post(passport.authenticate('local', {
       failureFlash: true
     }), function(req, res) {
-      res.send({
-        user: req.user,
-        redirect: (req.user.roles.indexOf('admin') !== -1) ? req.get('referer') : false
+      // Update the users last login date
+      User.update({ _id: req.user._id }, {$set: {lastLogin: new Date()} }, function(err) {
+        res.send({
+          user: req.user,
+          redirect: (req.user.roles.indexOf('admin') !== -1) ? req.get('referer') : false
+        });  
       });
     });
 

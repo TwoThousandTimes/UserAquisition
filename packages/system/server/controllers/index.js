@@ -38,10 +38,34 @@ exports.releasePotentialUsersFromLoggedInUser = function ( lockedUsers, app ) {
     }
 };
 
+
+/**
+*   Toggle the success of a Potential User.
+*/
+exports.togglePotentialSuccess = function ( req, res ) {
+    console.log('toggleSuccess: ' + req.body._id + ' ' + req.body.success);
+    PotentialUser.findOneAndUpdate({ _id: req.body._id}, {$set: { success: req.body.success}}, function ( err ) {
+        if (err) { console.log(err); res.status(400).send(); return; }
+        res.status(200).send();
+    });
+};
+
+/**
+*   Get unprocessed Potential Users.
+*/
 exports.getUnProcessedPotentialUsers = function ( req, res ) {
     PotentialUser.find( { 'processing.isProcessed': false }, function ( err, users ) {
         if (err) { console.log(err); res.status(400).send(); return; }
         res.send(users);
+    });
+};
+
+exports.getProcessedPotentialUsers = function ( req, res ) {
+    PotentialUser.find( { 'processing.isProcessed' : true } )
+                 .populate( { path: 'processing.processedBy', select: 'name'} )
+                 .exec( function ( err, users ) {
+        if (err) { console.log(err); res.status(400).send(); return; }
+        res.send( users );
     });
 };
 
@@ -70,6 +94,7 @@ exports.processPotential = function (req, res) {
         userdoc.processing.messageSentToUser = req.body.processing.messageSentToUser;
         userdoc.processing.siteReferedTo = req.body.processing.siteReferedTo;
         userdoc.processing.processedBy = req.user._id;
+        userdoc.processing.readability = req.body.processing.readability;
         userdoc.save( function (err) {
             if (err) {console.log(err); res.status(400).send(); return;}
             // Saved the user, emit the event

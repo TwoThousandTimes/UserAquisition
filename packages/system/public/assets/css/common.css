@@ -48,3 +48,10 @@ footer p {
 .ng-valid.ng-dirty {
 	border-color: #78FA89;
 }
+
+.table-order-by {
+	cursor: pointer;
+}
+.table-order-by:hover {
+	background-color: lightgray;
+}

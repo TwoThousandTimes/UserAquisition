@@ -13,7 +13,7 @@ var mongoose = require('mongoose'),
   templates = require('../template');
 
 exports.getAllUsers = function (req, res) {
-  User.find({}, 'name email roles', function ( err, users ) {
+  User.find({}, 'name email roles lastLogin', function ( err, users ) {
     if (err) { console.log(err); res.status(400).send(); return; }
     // Find out how many potential users were found and/or processed by this user.
     var i = 0;
@@ -25,7 +25,8 @@ exports.getAllUsers = function (req, res) {
           _id: users[i]._id,
           name: users[i].name,
           email: users[i].email,
-          roles: users[i].roles
+          roles: users[i].roles,
+          lastLogin: users[i].lastLogin
         };
         PotentialUser.find({ 'processing.processedBy': users[i]._id }, function ( err, processedUsers ) {
           if (err) { console.log(err); }
@@ -99,7 +100,6 @@ exports.create = function(req, res, next) {
     return res.status(400).send(errors);
   }
 
-  // Hard coded for now. Will address this with the user permissions system in v0.3.5
   tempUser.roles = ['authenticated'];
   tempUser.roles.push(tempUser.role);
 

@@ -37,13 +37,14 @@ angular.module('mean.system').controller('PotentialsInputController', ['$scope',
                 karma: $scope.potential.karma,
                 freq: $scope.potential.freq,
                 comments: $scope.potential.comments
-            }).success(function(response) {
+            }).success( function (response) {
                 // 1. Clear the form
                 $scope.potential = {};
+                $scope.errorRequired = false;
                 // 2. The user is added to the list of users upon socket response!
-            }).error(function(error) {
+            }).error( function (error) {
                 // TODO: process error and handle accordingly
-                alert('error: ' + error);
+                $scope.errorRequired = true;
             });
         };
     }

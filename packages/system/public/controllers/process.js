@@ -12,6 +12,13 @@ angular.module('mean.system').controller('ProcessController', ['$scope', '$rootS
 
         $scope.selectedUser = {};
 
+        var textStats = $window.textstatistics();
+        $scope.analyzeText = function () {
+            var text = $scope.selectedUser.processing.messageSentToUser;
+            if (text) 
+                $scope.selectedUser.processing.readability = textStats.fleschKincaidReadingEase(text);
+        };
+
         $scope.markAsProcessed = function( pUser ) {
             PotentialUsers.process( pUser ).success( function ( response ) {
                 // 1. TODO: Mark the user as processed in the view
