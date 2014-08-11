@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = {
-  db: 'mongodb://nharlow89:129143Nh@kahana.mongohq.com:10008/app28389537',
+  // db: 'mongodb://nharlow89:129143Nh@kahana.mongohq.com:10008/app28389537',
   app: {
-    name: 'MEAN - A Modern Stack - Production'
+    name: 'Two Thousand Times - User Acquisition'
   },
   facebook: {
     clientID: 'APP_ID',
