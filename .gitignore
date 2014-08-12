@@ -5,10 +5,10 @@ npm-debug.log
 .bower-*/
 .idea/
 nbproject/
-#node_modules/
+node_modules/
 #do not ignore the mean.js file from meanio module (includes the socket.io changes)
 !node_modules/meanio/lib/mean.js
-#bower_components
+bower_components
 mean.iml
 test/coverage/
 modules/public/
