@@ -1,6 +1,6 @@
 {
-  "name": "Two Thousand Times - User Acquisition",
-  "description": "User Acquisition app for Two Thousand Times",
+  "name": "twothousandtimes",
+  "description": "Two Thousand Times - User Acquisition",
   "private": false,
   "engines": {
     "node": "0.10.x",
