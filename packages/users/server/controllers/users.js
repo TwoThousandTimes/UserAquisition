@@ -92,7 +92,7 @@ exports.create = function(req, res, next) {
   req.assert('role', 'You must select a role for this user').notEmpty();
   req.assert('email', 'You must enter a valid email address').isEmail();
   req.assert('password', 'Password must be between 8-20 characters long').len(8, 20);
-  req.assert('username', 'Username cannot be more than 20 characters').len(1, 20);
+  // req.assert('username', 'Username cannot be more than 20 characters').len(1, 20);
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
   var errors = req.validationErrors();
