@@ -29,13 +29,28 @@
   				<td>{{pUser.freq}}</td>
   				<td>{{pUser.dateAdded | date : 'MMM d, y h:mm a' }}</td>
   				<td>{{pUser.processing.dateProcessed | date : 'MMM d, y h:mm a' }}</td>
-  				<td>{{pUser.processing.messageSentToUser}}</td>
+  				<td> <button class="btn btn-default btn-xs" ng-click="openModal( pUser.username, pUser.processing.messageSentToUser )">View Message</button> </td>
   				<td>{{pUser.processing.readability}}</td>
   				<td>{{pUser.processing.siteReferedTo}}</td>
   				<td>{{pUser.processing.processedBy.name}}</td>
-  				<td>{{pUser.comments}}</td>
+  				<td> <button class="btn btn-default btn-xs" ng-click="openModal( pUser.username, pUser.comments )">View Comments</button> </td>
           <td><input type="checkbox" ng-model="pUser.success" ng-change="toggleSuccess( pUser )"></td>
   			</tr>
   		</tbody>
 	</table>
+
+
+  <script type="text/ng-template" id="messageModal.html">
+      <div class="modal-header">
+          <h3 class="modal-title">Message Sent to: <strong>{{ username }}</strong> </h3>
+      </div>
+      <div class="modal-body">
+          <p> {{ message }} </p>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-default" ng-click="ok()">Close</button>
+      </div>
+  </script>
+
+
 </section>
