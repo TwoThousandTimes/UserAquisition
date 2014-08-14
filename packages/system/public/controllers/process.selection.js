@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('mean.system').controller('ProcessSelectionController', ['$scope', '$rootScope', '$window', 'Global', '$http', 'PotentialUsers', '$state', '$filter',
-    function($scope, $rootScope, $window, Global, $http, PotentialUsers, $state, $filter) {
+angular.module('mean.system').controller('ProcessSelectionController', ['$scope', '$rootScope', '$window', 'Global', 'PotentialUsers', '$state', '$filter',
+    function($scope, $rootScope, $window, Global, PotentialUsers, $state, $filter) {
         $scope.global = Global;
         $scope.potentialUsers = [];
 

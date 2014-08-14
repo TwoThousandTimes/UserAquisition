@@ -38,8 +38,8 @@
     <ul class="navbar-nav nav" data-ng-show="global.isAdmin">
       <li><a ui-sref='users'>Finders/Admins</a></li>
       <li><a ui-sref='potentialsNew'>Add Users</a></li>
-      <li><a ui-sref='processSelection'>Process Users</a></li>
-      <li><a ui-sref='processedPotentials'>View Processed Users</a></li>
+      <li><a ui-sref='processSelection'>Process Users <span class="badge"> {{ numUnprocessed }} </span></a></li>
+      <li><a ui-sref='processedPotentials'>View Processed Users <span class="badge"> {{ numProcessed }} </span></a></li>
       <li><a ui-sref='auth.register'>Register</a></li>
     </ul>
 

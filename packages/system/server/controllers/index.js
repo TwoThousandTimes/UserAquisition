@@ -4,6 +4,26 @@ var mean = require('meanio');
 var mongoose = require('mongoose'),
   PotentialUser = mongoose.model('PotentialUser');
 
+
+/**
+*   Retrieve the number of processed/unprocessed users.
+*/
+exports.getPotentialUserStats = function ( req, res ) {
+    var data = {
+        numProcessed: 0,
+        numUnprocessed: 0
+    };
+    PotentialUser.count( { 'processing.isProcessed': false }, function(err, numUnprocessed) {
+        if (err) { console.log(err); return; }
+        data.numUnprocessed = numUnprocessed;
+        PotentialUser.count( { 'processing.isProcessed': true }, function(err, numProcessed) {
+            if (err) { console.log(err); return; }
+            data.numProcessed = numProcessed;
+            res.send(data);
+        });
+    });
+};
+
 /**
 *   Lock a PotentialUser. Emits an event to all sockets (other than current socket!)
 */

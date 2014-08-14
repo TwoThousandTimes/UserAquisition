@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('mean.system').controller('HeaderController', ['$scope', '$rootScope', 'Global', 'Menus',
-  function($scope, $rootScope, Global, Menus) {
+angular.module('mean.system').controller('HeaderController', ['$scope', '$window', '$rootScope', 'Global', 'Menus', '$http',
+  function($scope, $window, $rootScope, Global, Menus, $http) {
     $scope.global = Global;
     $scope.menus = {};
 
@@ -32,6 +32,24 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$rootSc
         authenticated: !! $rootScope.user,
         user: $rootScope.user
       };
+    });
+
+    $http.get('/potential/stats').success( function(data) {
+      $scope.numProcessed = data.numProcessed;
+      $scope.numUnprocessed = data.numUnprocessed;
+    });
+
+    // Handle Socket events (ie update user numbers)
+
+    $window.socket.on('potential:new', function ( user ) {
+        $scope.numUnprocessed++;
+        $scope.$apply();  // update the view
+    });
+
+    $window.socket.on('potential:processed', function ( id ) {
+        $scope.numUnprocessed--;
+        $scope.numProcessed++;
+        $scope.$apply();
     });
 
   }
